@@ -1,4 +1,4 @@
-# 15 Puzzle Game
+# 15-Tile Shuffle Game
 
 A classic sliding puzzle game built with vanilla JavaScript, HTML, and CSS. Arrange tiles numbered 1-15 in order by sliding them into the empty space.
 
