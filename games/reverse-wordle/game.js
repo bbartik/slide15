@@ -265,7 +265,8 @@ class ReverseWordleGame {
         });
 
         const closeBtn = this.helpModal.querySelector('.close');
-        closeBtn.addEventListener('click', () => {
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             this.helpModal.classList.add('hidden');
         });
 
