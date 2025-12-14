@@ -3,34 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slide15</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Classic Games Collection</title>
+    <link rel="stylesheet" href="homepage.css">
 </head>
 <body>
     <div class="container">
-        <h1>Slide15</h1>
-        <div class="game-info">
-            <p>Move tiles to arrange them in order from 1 to 15</p>
-            <div class="stats">
-                <div class="stat-item">
-                    <span class="stat-label">Moves:</span>
-                    <span id="moveCounter" class="stat-value">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Personal Best:</span>
-                    <span id="bestScore" class="stat-value">--</span>
-                </div>
-            </div>
-            <button id="shuffleBtn">Shuffle</button>
-            <button id="resetBtn">Reset</button>
-        </div>
-        <div id="puzzle" class="puzzle-grid"></div>
-        <div id="winMessage" class="win-message hidden">
-            <h2>Congratulations! You solved it!</h2>
-            <p id="winMoves"></p>
-            <p id="newRecord" class="new-record hidden">New Personal Best!</p>
+        <h1>Classic Games</h1>
+        <p class="subtitle">Choose a game to play</p>
+
+        <div class="games-grid">
+            <a href="games/slide15/" class="game-card">
+                <div class="game-icon">🧩</div>
+                <h2>Slide15</h2>
+                <p>Arrange numbered tiles in order by sliding them into the empty space</p>
+                <div class="play-button">Play Now</div>
+            </a>
+
+            <a href="games/snake/" class="game-card">
+                <div class="game-icon">🐍</div>
+                <h2>Snake</h2>
+                <p>Control a growing snake, eat food, and avoid crashing into walls or yourself</p>
+                <div class="play-button">Play Now</div>
+            </a>
         </div>
     </div>
-    <script src="game.js"></script>
 </body>
 </html>

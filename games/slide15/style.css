@@ -84,6 +84,21 @@ button:hover {
     background-color: #e68900;
 }
 
+.home-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.home-link:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
 .puzzle-grid {
     display: grid;
     grid-template-columns: repeat(4, 100px);

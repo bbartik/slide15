@@ -1,23 +1,36 @@
-# Slide15
+# Classic Games Collection
 
-A classic sliding puzzle game built with vanilla JavaScript, HTML, and CSS. Arrange tiles numbered 1-15 in order by sliding them into the empty space.
+A collection of classic arcade and puzzle games built with vanilla JavaScript, HTML, and CSS.
 
-## Features
+## Games
 
+### 1. Slide15
+A classic sliding puzzle game where you arrange tiles numbered 1-15 in order by sliding them into the empty space.
+
+**Features:**
 - 4x4 grid with 15 numbered tiles
-- Move counter to track your clicks
-- Personal best tracking using localStorage
-- Auto-shuffle on start
+- Move counter and personal best tracking
 - Responsive design for mobile devices
 - Win detection with congratulations message
-- New record notifications
+
+[View Slide15 README](games/slide15/README.md)
+
+### 2. Snake
+The classic arcade game where you control a growing snake. Eat food to grow longer, but don't crash into walls or yourself!
+
+**Features:**
+- Smooth canvas-based rendering
+- Score tracking with high score persistence
+- Pause/Resume functionality
+- Collision detection for walls and self
+
+[View Snake README](games/snake/README.md)
 
 ## How to Play
 
-1. The puzzle starts shuffled automatically
-2. Click on any tile adjacent to the empty space to move it
-3. Arrange all tiles in order from 1-15
-4. Try to solve it in the fewest moves possible to beat your personal best!
+1. Open `index.html` in your browser
+2. Click on any game card to start playing
+3. Each game has its own instructions and controls
 
 ## Hosting Options
 
@@ -51,11 +64,21 @@ Simply open `index.html` in your web browser to play locally.
 
 ```
 game1/
-├── index.html      # Main HTML structure
-├── style.css       # Styling and layout
-├── game.js         # Game logic and functionality
-├── .gitignore      # Git ignore file
-└── README.md       # This file
+├── index.html          # Games homepage
+├── homepage.css        # Homepage styling
+├── games/
+│   ├── slide15/
+│   │   ├── index.html  # Slide15 game page
+│   │   ├── style.css   # Slide15 styling
+│   │   ├── game.js     # Slide15 game logic
+│   │   └── README.md   # Slide15 documentation
+│   └── snake/
+│       ├── index.html  # Snake game page
+│       ├── style.css   # Snake styling
+│       ├── game.js     # Snake game logic
+│       └── README.md   # Snake documentation
+├── .gitignore
+└── README.md           # This file
 ```
 
 ## Technologies Used
