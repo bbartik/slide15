@@ -7,67 +7,197 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Blackjack</h1>
-        <div class="game-info">
-            <p>Get as close to 21 as possible without going over. Dealer stands on 17.</p>
-            <div class="stats">
-                <div class="stat-item">
-                    <span class="stat-label">Chips:</span>
-                    <span id="chips" class="stat-value">1000</span>
+    <div class="main-container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <h1>Casino Blackjack</h1>
+            <div class="top-controls">
+                <a href="../../index.html" class="home-link">← Back to Games</a>
+            </div>
+        </div>
+
+        <!-- Game Settings Panel -->
+        <div class="settings-panel">
+            <div class="settings-group">
+                <label class="toggle-label">
+                    <input type="checkbox" id="deckToggle" checked>
+                    <span>6 Decks</span>
+                    <span class="toggle-off">Single Deck</span>
+                </label>
+            </div>
+            <div class="settings-group">
+                <label class="toggle-label">
+                    <input type="checkbox" id="newbieToggle">
+                    <span>AI: Basic Strategy</span>
+                    <span class="toggle-off">AI: Newbie Mode</span>
+                </label>
+            </div>
+            <div class="settings-group">
+                <label>Game Speed:
+                    <input type="range" id="speedControl" min="1" max="10" value="5">
+                    <span id="speedValue">5</span>
+                </label>
+            </div>
+            <div class="settings-group deck-info">
+                <span>Cards Remaining: <strong id="cardsRemaining">312</strong></span>
+                <span>Decks: <strong id="decksRemaining">6.0</strong></span>
+            </div>
+        </div>
+
+        <!-- Stats Panel -->
+        <div class="stats-panel">
+            <div class="stat-item">
+                <span class="stat-label">Bankroll:</span>
+                <span id="chips" class="stat-value">$1000</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Hands Played:</span>
+                <span id="handsPlayed" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Win Rate:</span>
+                <span id="winRate" class="stat-value">0%</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Net:</span>
+                <span id="netWinnings" class="stat-value">$0</span>
+            </div>
+            <button id="resetStatsBtn" class="small-btn">Reset Stats</button>
+        </div>
+
+        <!-- Main Game Area -->
+        <div class="game-container">
+            <!-- Dealer Area -->
+            <div class="dealer-section">
+                <div class="dealer-info">
+                    <h2>Dealer</h2>
+                    <span class="score" id="dealerScore">-</span>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">Bet:</span>
-                    <span id="currentBet" class="stat-value">0</span>
+                <div id="dealerCards" class="cards-display"></div>
+            </div>
+
+            <!-- Shuffle Message -->
+            <div id="shuffleMessage" class="shuffle-message hidden">
+                <h2>🎴 Shuffling Cards... 🎴</h2>
+            </div>
+
+            <!-- Player Spots -->
+            <div class="player-spots">
+                <div class="player-spot" id="spot0">
+                    <div class="spot-header">
+                        <span class="spot-label">You</span>
+                        <span class="spot-score" id="score0">-</span>
+                    </div>
+                    <div class="spot-cards" id="cards0"></div>
+                    <div class="spot-bet-area">
+                        <input type="number" class="bet-input" id="betInput0" min="5" value="10" placeholder="Bet">
+                        <div class="bet-display" id="betDisplay0">$10</div>
+                    </div>
+                    <div class="spot-controls" id="controls0">
+                        <button class="action-btn" data-action="hit" data-spot="0">Hit</button>
+                        <button class="action-btn" data-action="stand" data-spot="0">Stand</button>
+                        <button class="action-btn" data-action="double" data-spot="0">Double</button>
+                        <button class="action-btn" data-action="split" data-spot="0">Split</button>
+                    </div>
+                    <div class="spot-result" id="result0"></div>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">Wins:</span>
-                    <span id="wins" class="stat-value">0</span>
+
+                <div class="player-spot inactive" id="spot1">
+                    <div class="spot-header">
+                        <span class="spot-label">Spot 2</span>
+                        <button class="add-player-btn" data-spot="1">+ Add AI</button>
+                        <button class="remove-player-btn hidden" data-spot="1">Remove</button>
+                        <span class="spot-score hidden" id="score1">-</span>
+                    </div>
+                    <div class="spot-cards" id="cards1"></div>
+                    <div class="spot-bet-area">
+                        <input type="number" class="bet-input" id="betInput1" min="5" value="25" placeholder="Bet">
+                        <div class="bet-display" id="betDisplay1">$25</div>
+                    </div>
+                    <div class="spot-result" id="result1"></div>
+                </div>
+
+                <div class="player-spot inactive" id="spot2">
+                    <div class="spot-header">
+                        <span class="spot-label">Spot 3</span>
+                        <button class="add-player-btn" data-spot="2">+ Add AI</button>
+                        <button class="remove-player-btn hidden" data-spot="2">Remove</button>
+                        <span class="spot-score hidden" id="score2">-</span>
+                    </div>
+                    <div class="spot-cards" id="cards2"></div>
+                    <div class="spot-bet-area">
+                        <input type="number" class="bet-input" id="betInput2" min="5" value="25" placeholder="Bet">
+                        <div class="bet-display" id="betDisplay2">$25</div>
+                    </div>
+                    <div class="spot-result" id="result2"></div>
+                </div>
+
+                <div class="player-spot inactive" id="spot3">
+                    <div class="spot-header">
+                        <span class="spot-label">Spot 4</span>
+                        <button class="add-player-btn" data-spot="3">+ Add AI</button>
+                        <button class="remove-player-btn hidden" data-spot="3">Remove</button>
+                        <span class="spot-score hidden" id="score3">-</span>
+                    </div>
+                    <div class="spot-cards" id="cards3"></div>
+                    <div class="spot-bet-area">
+                        <input type="number" class="bet-input" id="betInput3" min="5" value="25" placeholder="Bet">
+                        <div class="bet-display" id="betDisplay3">$25</div>
+                    </div>
+                    <div class="spot-result" id="result3"></div>
+                </div>
+
+                <div class="player-spot inactive" id="spot4">
+                    <div class="spot-header">
+                        <span class="spot-label">Spot 5</span>
+                        <button class="add-player-btn" data-spot="4">+ Add AI</button>
+                        <button class="remove-player-btn hidden" data-spot="4">Remove</button>
+                        <span class="spot-score hidden" id="score4">-</span>
+                    </div>
+                    <div class="spot-cards" id="cards4"></div>
+                    <div class="spot-bet-area">
+                        <input type="number" class="bet-input" id="betInput4" min="5" value="25" placeholder="Bet">
+                        <div class="bet-display" id="betDisplay4">$25</div>
+                    </div>
+                    <div class="spot-result" id="result4"></div>
+                </div>
+
+                <div class="player-spot inactive" id="spot5">
+                    <div class="spot-header">
+                        <span class="spot-label">Spot 6</span>
+                        <button class="add-player-btn" data-spot="5">+ Add AI</button>
+                        <button class="remove-player-btn hidden" data-spot="5">Remove</button>
+                        <span class="spot-score hidden" id="score5">-</span>
+                    </div>
+                    <div class="spot-cards" id="cards5"></div>
+                    <div class="spot-bet-area">
+                        <input type="number" class="bet-input" id="betInput5" min="5" value="25" placeholder="Bet">
+                        <div class="bet-display" id="betDisplay5">$25</div>
+                    </div>
+                    <div class="spot-result" id="result5"></div>
+                </div>
+
+                <div class="player-spot inactive" id="spot6">
+                    <div class="spot-header">
+                        <span class="spot-label">Spot 7</span>
+                        <button class="add-player-btn" data-spot="6">+ Add AI</button>
+                        <button class="remove-player-btn hidden" data-spot="6">Remove</button>
+                        <span class="spot-score hidden" id="score6">-</span>
+                    </div>
+                    <div class="spot-cards" id="cards6"></div>
+                    <div class="spot-bet-area">
+                        <input type="number" class="bet-input" id="betInput6" min="5" value="25" placeholder="Bet">
+                        <div class="bet-display" id="betDisplay6">$25</div>
+                    </div>
+                    <div class="spot-result" id="result6"></div>
                 </div>
             </div>
-        </div>
 
-        <div id="bettingArea" class="betting-area">
-            <h2>Place Your Bet</h2>
-            <div class="bet-controls">
-                <button class="bet-btn" data-amount="10">$10</button>
-                <button class="bet-btn" data-amount="25">$25</button>
-                <button class="bet-btn" data-amount="50">$50</button>
-                <button class="bet-btn" data-amount="100">$100</button>
-                <button class="bet-btn" data-amount="500">$500</button>
+            <!-- Deal Button Area -->
+            <div class="deal-area">
+                <button id="dealBtn" class="deal-btn">Deal Cards</button>
+                <button id="insuranceBtn" class="insurance-btn hidden">Insurance?</button>
             </div>
-            <div class="betting-input">
-                <input type="number" id="customBet" min="1" placeholder="Custom amount">
-                <button id="placeBetBtn">Deal Cards</button>
-            </div>
-        </div>
-
-        <div id="gameArea" class="game-area hidden">
-            <div class="dealer-area">
-                <h2>Dealer: <span id="dealerScore">0</span></h2>
-                <div id="dealerCards" class="cards-container"></div>
-            </div>
-
-            <div class="player-area">
-                <h2>Player: <span id="playerScore">0</span></h2>
-                <div id="playerCards" class="cards-container"></div>
-            </div>
-
-            <div class="game-controls">
-                <button id="hitBtn">Hit</button>
-                <button id="standBtn">Stand</button>
-                <button id="doubleBtn">Double Down</button>
-            </div>
-        </div>
-
-        <div id="resultMessage" class="result-message hidden">
-            <h2 id="resultText"></h2>
-            <button id="newRoundBtn">New Round</button>
-        </div>
-
-        <div class="controls">
-            <button id="resetChipsBtn">Reset Chips</button>
-            <a href="../../index.html" class="home-link">Back to Games</a>
         </div>
     </div>
     <script src="game.js"></script>
