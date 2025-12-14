@@ -685,6 +685,7 @@ async function playHand(spot, isSplitHand) {
     } else {
         // Human player - enable controls and wait for their action
         updateSpotControls(spot.index);
+        updateHintPanel(); // Show learning mode hints
         // Don't proceed - wait for button click
         // The action buttons will call the appropriate functions
         return; // Return and wait for user input
@@ -702,6 +703,7 @@ async function hitAction(spot, isSplitHand = false) {
         spot.result = 'Bust!';
         renderSpot(spot.index);
         disableAllControls();
+        updateHintPanel(); // Hide hints after bust
 
         // If human player busts, continue the game
         if (!spot.isAI) {
@@ -714,6 +716,7 @@ async function hitAction(spot, isSplitHand = false) {
 
     if (!spot.isAI) {
         updateSpotControls(spot.index);
+        updateHintPanel(); // Update hints after hit
     }
 
     return handValue >= 21;
@@ -721,6 +724,7 @@ async function hitAction(spot, isSplitHand = false) {
 
 async function standAction(spot) {
     disableAllControls();
+    updateHintPanel(); // Hide hints after stand
 
     // Continue from human player's spot through remaining AI spots
     for (let i = spot.index + 1; i < state.spots.length; i++) {
@@ -779,6 +783,7 @@ async function doubleAction(spot, isSplitHand = false) {
     // Then stand (continue game)
     if (!spot.isAI) {
         disableAllControls();
+        updateHintPanel(); // Hide hints after double
         await sleep(1000);
         await standAction(spot);
     }
@@ -803,6 +808,7 @@ async function splitAction(spot) {
 
     if (!spot.isAI) {
         updateSpotControls(spot.index);
+        updateHintPanel(); // Update hints after split
     }
 }
 
