@@ -32,6 +32,7 @@ const state = {
     // Settings
     useNewbieAI: false,
     gameSpeed: 5,
+    learningMode: false,
 
     // Statistics
     bankroll: 1000,
@@ -233,6 +234,123 @@ function getAIAction(spot, hand, dealerUpCard) {
     return getBasicStrategyAction(hand, dealerUpCard, canDouble, canSplitNow);
 }
 
+// Generate strategy hint for learning mode
+function generateHint(hand, dealerUpCard, canDouble, canSplitNow) {
+    const playerValue = calculateHandValue(hand);
+    const dealerValue = getCardValue(dealerUpCard);
+    const isSoft = isSoftHand(hand);
+    const isPair = canSplit(hand);
+
+    const action = getBasicStrategyAction(hand, dealerUpCard, canDouble, canSplitNow);
+
+    let hint = '';
+    let explanation = '';
+
+    // Pair splitting hints
+    if (isPair && canSplitNow) {
+        const pairValue = getCardValue(hand[0]);
+        if (pairValue === 11) {
+            hint = '<span class="recommended">✓ SPLIT</span> - Always split Aces!';
+            explanation = 'Splitting Aces gives you two chances at 21. This is one of the best plays in blackjack.';
+        } else if (pairValue === 8) {
+            hint = '<span class="recommended">✓ SPLIT</span> - Always split 8s!';
+            explanation = 'Two 8s make 16 (worst hand). Splitting gives you better chances to improve.';
+        } else if (pairValue === 10) {
+            hint = '<span class="avoid">✗ DON\'T SPLIT</span> - Never split 10s!';
+            explanation = 'You have 20, which is excellent. Splitting would likely make it worse.';
+        } else if (action === 'split') {
+            hint = '<span class="recommended">✓ SPLIT</span>';
+            explanation = `Dealer shows ${dealerValue}. Splitting this pair is optimal here.`;
+        }
+    }
+
+    // Soft hand hints
+    if (!hint && isSoft && playerValue !== 21) {
+        if (playerValue >= 19) {
+            hint = '<span class="recommended">✓ STAND</span> - Soft ' + playerValue;
+            explanation = 'Soft 19-20 are strong hands. Stand and let the dealer try to beat you.';
+        } else if (playerValue === 18) {
+            if (dealerValue <= 8) {
+                hint = '<span class="recommended">✓ STAND</span> - Soft 18';
+                explanation = `Dealer shows ${dealerValue}. Your soft 18 is likely good enough.`;
+            } else {
+                hint = '<span class="recommended">✓ HIT</span> - Soft 18 vs strong dealer';
+                explanation = `Dealer shows ${dealerValue}. Hit to try improving your hand.`;
+            }
+        } else {
+            hint = '<span class="recommended">✓ HIT</span> - Soft hand';
+            explanation = 'Soft hands can\'t bust on one card. Hit to improve your total.';
+        }
+    }
+
+    // Hard hand hints
+    if (!hint) {
+        if (playerValue >= 17) {
+            hint = '<span class="recommended">✓ STAND</span> - Strong hand';
+            explanation = 'You have 17+. Risk of busting is too high. Let the dealer play.';
+        } else if (playerValue === 11 && canDouble) {
+            hint = '<span class="recommended">✓ DOUBLE DOWN</span> - Perfect for 11!';
+            explanation = 'You have 11. Great chance to hit 21. Double your bet!';
+        } else if (playerValue === 10 && canDouble && dealerValue <= 9) {
+            hint = '<span class="recommended">✓ DOUBLE DOWN</span> - Good spot!';
+            explanation = `Dealer shows ${dealerValue}. You have 10. Double to maximize profit.`;
+        } else if (playerValue <= 11) {
+            hint = '<span class="recommended">✓ HIT</span> - Can\'t bust';
+            explanation = 'You can\'t bust with ' + playerValue + '. Always hit.';
+        } else if (playerValue >= 13 && dealerValue <= 6) {
+            hint = '<span class="recommended">✓ STAND</span> - Dealer might bust';
+            explanation = `Dealer shows ${dealerValue} (weak). Let them bust instead of risking your hand.`;
+        } else if (playerValue === 12) {
+            if (dealerValue >= 4 && dealerValue <= 6) {
+                hint = '<span class="recommended">✓ STAND</span> - Dealer weak';
+                explanation = `Dealer shows ${dealerValue}. Stand and hope they bust.`;
+            } else {
+                hint = '<span class="recommended">✓ HIT</span>';
+                explanation = `Dealer shows ${dealerValue}. 12 is weak, you need to improve.`;
+            }
+        } else {
+            hint = '<span class="recommended">✓ HIT</span>';
+            explanation = `You have ${playerValue}, dealer shows ${dealerValue}. Hit to improve.`;
+        }
+    }
+
+    return { hint, explanation };
+}
+
+function updateHintPanel() {
+    const hintsPanel = document.getElementById('hintsPanel');
+    const hintContent = document.getElementById('hintContent');
+    const hintExplanation = document.getElementById('hintExplanation');
+
+    if (!state.learningMode || state.currentSpotIndex !== 0 || !state.spots[0].isActive) {
+        hintsPanel.classList.add('hidden');
+        return;
+    }
+
+    const humanSpot = state.spots[0];
+    const hand = state.currentHandIsSplit ? humanSpot.splitHand : humanSpot.hand;
+
+    if (hand.length === 0 || !state.dealerHand.length) {
+        hintsPanel.classList.add('hidden');
+        return;
+    }
+
+    const handValue = calculateHandValue(hand);
+    if (handValue >= 21) {
+        hintsPanel.classList.add('hidden');
+        return;
+    }
+
+    const canDouble = hand.length === 2 && humanSpot.bet <= state.bankroll;
+    const canSplitNow = canSplit(hand) && humanSpot.bet <= state.bankroll && !humanSpot.isSplit;
+
+    const { hint, explanation } = generateHint(hand, state.dealerHand[0], canDouble, canSplitNow);
+
+    hintContent.innerHTML = `<p>${hint}</p>`;
+    hintExplanation.textContent = explanation;
+    hintsPanel.classList.remove('hidden');
+}
+
 // ===== DOM HELPERS =====
 function createCardElement(card, isHidden = false) {
     const cardDiv = document.createElement('div');
@@ -411,6 +529,9 @@ function updateSpotControls(spotIndex) {
     standBtn.disabled = handValue > 21;
     doubleBtn.disabled = !canDouble || handValue >= 21;
     splitBtn.disabled = !canSplitNow;
+
+    // Update learning mode hints
+    updateHintPanel();
 }
 
 // ===== GAME ACTIONS =====
@@ -887,6 +1008,11 @@ function handleShowAIToggle(event) {
     }
 }
 
+function handleLearningToggle(event) {
+    state.learningMode = event.target.checked;
+    updateHintPanel();
+}
+
 function handleResetStats() {
     state.bankroll = 1000;
     state.handsPlayed = 0;
@@ -933,6 +1059,7 @@ async function init() {
     document.getElementById('dealBtn').addEventListener('click', handleDeal);
     document.getElementById('deckToggle').addEventListener('change', handleDeckToggle);
     document.getElementById('showAIToggle').addEventListener('change', handleShowAIToggle);
+    document.getElementById('learningToggle').addEventListener('change', handleLearningToggle);
     document.getElementById('newbieToggle').addEventListener('change', handleNewbieToggle);
     document.getElementById('speedControl').addEventListener('input', handleSpeedChange);
     document.getElementById('resetStatsBtn').addEventListener('click', handleResetStats);

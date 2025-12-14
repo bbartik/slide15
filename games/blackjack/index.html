@@ -45,6 +45,13 @@
             </div>
             <div class="settings-group">
                 <label class="toggle-label">
+                    <input type="checkbox" id="learningToggle">
+                    <span>Learning Mode: ON</span>
+                    <span class="toggle-off">Learning Mode: OFF</span>
+                </label>
+            </div>
+            <div class="settings-group">
+                <label class="toggle-label">
                     <input type="checkbox" id="newbieToggle">
                     <span>AI: Basic Strategy</span>
                     <span class="toggle-off">AI: Newbie Mode</span>
@@ -81,6 +88,15 @@
                 <span id="netWinnings" class="stat-value">$0</span>
             </div>
             <button id="resetStatsBtn" class="small-btn">Reset Stats</button>
+        </div>
+
+        <!-- Learning Mode Hints Panel -->
+        <div id="hintsPanel" class="hints-panel hidden">
+            <h3>💡 Strategy Hint</h3>
+            <div id="hintContent" class="hint-content">
+                <p>Make your decision...</p>
+            </div>
+            <div class="hint-explanation" id="hintExplanation"></div>
         </div>
 
         <!-- Main Game Area -->
