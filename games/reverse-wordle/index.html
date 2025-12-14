@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverse Wordle: Guess the Rule</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔄 Reverse Wordle</h1>
+            <p class="subtitle">Deduce the transformation rule from examples</p>
+        </header>
+
+        <div class="game-info">
+            <div class="info-item">
+                <span class="label">Difficulty:</span>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                    <option value="expert">Expert</option>
+                </select>
+            </div>
+            <div class="info-item">
+                <span class="label">Attempts:</span>
+                <span id="attempts">0/6</span>
+            </div>
+        </div>
+
+        <div class="examples-section">
+            <h2>Examples</h2>
+            <div id="examples" class="examples-grid"></div>
+            <button id="newExampleBtn" class="btn btn-secondary">Show Another Example</button>
+        </div>
+
+        <div class="guess-section">
+            <h2>Your Guess</h2>
+            <p class="hint">Describe the transformation rule:</p>
+            <input type="text" id="guessInput" placeholder="e.g., 'reverse the word' or 'replace a with e'" maxlength="100">
+            <button id="submitBtn" class="btn btn-primary">Submit Guess</button>
+        </div>
+
+        <div id="feedback" class="feedback"></div>
+
+        <div id="history" class="history"></div>
+
+        <div id="gameOver" class="game-over hidden">
+            <h2 id="resultTitle"></h2>
+            <div class="rule-reveal">
+                <h3>The Rule Was:</h3>
+                <p id="actualRule"></p>
+                <div id="ruleExplanation"></div>
+            </div>
+            <button id="playAgainBtn" class="btn btn-primary">Play Again</button>
+        </div>
+
+        <div class="help-section">
+            <button id="helpBtn" class="btn btn-link">How to Play</button>
+            <div id="helpModal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>How to Play</h2>
+                    <ul>
+                        <li>A secret transformation rule is chosen</li>
+                        <li>You see examples of inputs and their transformed outputs</li>
+                        <li>Deduce the rule from the patterns you observe</li>
+                        <li>You have 6 attempts to guess the rule correctly</li>
+                        <li>Request more examples to help identify the pattern</li>
+                        <li>Examples: "reverse", "capitalize vowels", "shift letters by 1", etc.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
