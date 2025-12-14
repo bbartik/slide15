@@ -515,6 +515,11 @@ async function playAllSpots() {
         // Play main hand
         await playHand(spot, false);
 
+        // If human player, stop here and wait for their actions
+        if (!spot.isAI) {
+            return; // Human player controls, don't proceed
+        }
+
         // If split, play split hand
         if (spot.splitHand) {
             setCurrentTurn(i, true);
@@ -576,6 +581,13 @@ async function hitAction(spot, isSplitHand = false) {
         spot.result = 'Bust!';
         renderSpot(spot.index);
         disableAllControls();
+
+        // If human player busts, continue the game
+        if (!spot.isAI) {
+            await sleep(1000);
+            await standAction(spot); // Continue to remaining players and dealer
+        }
+
         return true; // Hand is done
     }
 
@@ -588,20 +600,39 @@ async function hitAction(spot, isSplitHand = false) {
 
 async function standAction(spot) {
     disableAllControls();
-    // Move to next spot
-    const nextActiveSpot = state.spots.findIndex((s, i) =>
-        i > spot.index && s.isActive && calculateHandValue(s.hand) < 21
-    );
 
-    if (nextActiveSpot === -1) {
-        // No more spots, dealer plays
-        setCurrentTurn(-1);
-        await playDealer();
-        await resolveAllHands();
-    } else {
-        setCurrentTurn(nextActiveSpot);
-        await playHand(state.spots[nextActiveSpot], false);
+    // Continue from human player's spot through remaining AI spots
+    for (let i = spot.index + 1; i < state.spots.length; i++) {
+        const nextSpot = state.spots[i];
+        if (!nextSpot.isActive) continue;
+
+        setCurrentTurn(i, false);
+
+        // Check for blackjack
+        if (isBlackjack(nextSpot.hand)) {
+            nextSpot.result = 'Blackjack!';
+            renderSpot(i);
+            await sleep(500);
+            continue;
+        }
+
+        // Play main hand (AI only at this point)
+        await playHand(nextSpot, false);
+
+        // If split, play split hand
+        if (nextSpot.splitHand) {
+            setCurrentTurn(i, true);
+            await playHand(nextSpot, true);
+        }
     }
+
+    setCurrentTurn(-1);
+
+    // Dealer's turn
+    await playDealer();
+
+    // Resolve all hands
+    await resolveAllHands();
 }
 
 async function doubleAction(spot, isSplitHand = false) {
@@ -613,11 +644,22 @@ async function doubleAction(spot, isSplitHand = false) {
     renderSpot(spot.index);
 
     // Hit exactly once
-    await hitAction(spot, isSplitHand);
+    const hand = isSplitHand ? spot.splitHand : spot.hand;
+    hand.push(dealCard());
+    renderSpot(spot.index);
+    updateDeckInfo();
 
-    // Then stand
+    // Check if bust
+    if (calculateHandValue(hand) > 21) {
+        spot.result = 'Bust!';
+        renderSpot(spot.index);
+    }
+
+    // Then stand (continue game)
     if (!spot.isAI) {
         disableAllControls();
+        await sleep(1000);
+        await standAction(spot);
     }
 }
 

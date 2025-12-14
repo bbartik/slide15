@@ -193,17 +193,17 @@ body {
 .game-container {
     background: linear-gradient(135deg, #0a5c0a 0%, #0d7a0d 100%);
     border-radius: 20px;
-    padding: 30px;
+    padding: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     position: relative;
-    min-height: 600px;
+    min-height: auto;
 }
 
 /* Dealer Section */
 .dealer-section {
     text-align: center;
-    margin-bottom: 40px;
-    padding: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 15px;
 }
@@ -264,8 +264,8 @@ body {
 .player-spots {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 15px;
-    margin: 30px 0;
+    gap: 12px;
+    margin: 20px 0;
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
@@ -279,8 +279,8 @@ body {
     background: rgba(0, 0, 0, 0.3);
     border: 3px solid rgba(255, 215, 0, 0.5);
     border-radius: 15px;
-    padding: 15px;
-    min-height: 300px;
+    padding: 12px;
+    min-height: 240px;
     display: flex;
     flex-direction: column;
     transition: all 0.3s;
@@ -539,7 +539,8 @@ body {
 /* Deal Area */
 .deal-area {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 15px;
+    margin-bottom: 10px;
     display: flex;
     justify-content: center;
     gap: 20px;
