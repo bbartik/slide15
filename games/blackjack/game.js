@@ -557,11 +557,11 @@ async function playHand(spot, isSplitHand) {
             await sleep(500);
         }
     } else {
-        // Human player - enable controls and wait
+        // Human player - enable controls and wait for their action
         updateSpotControls(spot.index);
-        // Human controls are handled by button clicks
-        // We need to wait until they stand or bust
-        // This will be handled by the action buttons
+        // Don't proceed - wait for button click
+        // The action buttons will call the appropriate functions
+        return; // Return and wait for user input
     }
 }
 
@@ -836,6 +836,15 @@ function handleSpeedChange(event) {
     document.getElementById('speedValue').textContent = state.gameSpeed;
 }
 
+function handleShowAIToggle(event) {
+    const playerSpots = document.querySelector('.player-spots');
+    if (event.target.checked) {
+        playerSpots.classList.remove('hide-ai');
+    } else {
+        playerSpots.classList.add('hide-ai');
+    }
+}
+
 function handleResetStats() {
     state.bankroll = 1000;
     state.handsPlayed = 0;
@@ -881,6 +890,7 @@ async function init() {
     // Event listeners
     document.getElementById('dealBtn').addEventListener('click', handleDeal);
     document.getElementById('deckToggle').addEventListener('change', handleDeckToggle);
+    document.getElementById('showAIToggle').addEventListener('change', handleShowAIToggle);
     document.getElementById('newbieToggle').addEventListener('change', handleNewbieToggle);
     document.getElementById('speedControl').addEventListener('input', handleSpeedChange);
     document.getElementById('resetStatsBtn').addEventListener('click', handleResetStats);

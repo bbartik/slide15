@@ -27,19 +27,26 @@
             </div>
             <div class="settings-group">
                 <label class="toggle-label">
+                    <input type="checkbox" id="showAIToggle" checked>
+                    <span>Show AI Spots</span>
+                    <span class="toggle-off">Hide AI Spots</span>
+                </label>
+            </div>
+            <div class="settings-group">
+                <label class="toggle-label">
                     <input type="checkbox" id="newbieToggle">
                     <span>AI: Basic Strategy</span>
                     <span class="toggle-off">AI: Newbie Mode</span>
                 </label>
             </div>
             <div class="settings-group">
-                <label>Game Speed:
+                <label>Speed:
                     <input type="range" id="speedControl" min="1" max="10" value="5">
                     <span id="speedValue">5</span>
                 </label>
             </div>
             <div class="settings-group deck-info">
-                <span>Cards Remaining: <strong id="cardsRemaining">312</strong></span>
+                <span>Cards: <strong id="cardsRemaining">312</strong></span>
                 <span>Decks: <strong id="decksRemaining">6.0</strong></span>
             </div>
         </div>

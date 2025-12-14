@@ -271,6 +271,10 @@ body {
     margin-right: auto;
 }
 
+.player-spots.hide-ai .player-spot:not(#spot0) {
+    display: none;
+}
+
 .player-spot {
     background: rgba(0, 0, 0, 0.3);
     border: 3px solid rgba(255, 215, 0, 0.5);
@@ -590,7 +594,7 @@ body {
 /* Responsive Design */
 @media (max-width: 1200px) {
     .player-spots {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .card {
@@ -598,33 +602,155 @@ body {
         height: 77px;
         font-size: 1.1em;
     }
+
+    .settings-panel, .stats-panel {
+        padding: 12px 20px;
+        gap: 20px;
+        font-size: 0.95em;
+    }
 }
 
 @media (max-width: 768px) {
+    .main-container {
+        padding: 5px;
+    }
+
     .top-bar {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
+        padding: 10px 15px;
+        margin-bottom: 8px;
     }
 
     .top-bar h1 {
-        font-size: 1.5em;
+        font-size: 1.3em;
     }
 
     .settings-panel, .stats-panel {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
+        padding: 10px 15px;
+        gap: 10px;
+        font-size: 0.85em;
+        margin-bottom: 8px;
+    }
+
+    .settings-group {
+        font-size: 0.9em;
     }
 
     .deck-info {
         margin-left: 0;
-        flex-direction: column;
-        align-items: flex-start;
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .stat-item {
+        font-size: 0.9em;
+    }
+
+    .game-container {
+        padding: 15px;
+        min-height: auto;
+    }
+
+    .dealer-section {
+        padding: 12px;
+        margin-bottom: 20px;
+    }
+
+    .dealer-info h2 {
+        font-size: 1.2em;
+    }
+
+    .score {
+        padding: 6px 15px;
+        font-size: 1em;
     }
 
     .player-spots {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin: 15px 0;
+    }
+
+    .player-spot {
+        padding: 12px;
+        min-height: 250px;
+    }
+
+    .card {
+        width: 50px;
+        height: 70px;
+        font-size: 1em;
+    }
+
+    .cards-display {
+        min-height: 80px;
+    }
+
+    .spot-cards {
+        min-height: 80px;
+    }
+
+    .action-btn {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+
+    .deal-btn {
+        padding: 12px 30px;
+        font-size: 1.1em;
+    }
+
+    .insurance-btn {
+        padding: 10px 25px;
+        font-size: 1em;
+    }
+
+    .toggle-label input[type="checkbox"] {
+        width: 40px;
+        height: 20px;
+    }
+
+    .toggle-label input[type="checkbox"]::before {
+        width: 16px;
+        height: 16px;
+    }
+
+    .toggle-label input[type="checkbox"]:checked::before {
+        transform: translateX(20px);
+    }
+
+    #speedControl {
+        width: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-bar h1 {
+        font-size: 1.1em;
+    }
+
+    .settings-panel {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .stats-panel {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .small-btn {
+        margin-left: 0;
+        margin-top: 8px;
+        width: 100%;
+    }
+
+    .game-container {
+        padding: 10px;
+    }
+
+    .player-spot {
+        padding: 10px;
+        min-height: 220px;
     }
 
     .card {
@@ -633,18 +759,12 @@ body {
         font-size: 0.9em;
     }
 
+    .spot-header {
+        font-size: 0.9em;
+    }
+
     .deal-btn {
-        padding: 15px 35px;
-        font-size: 1.2em;
-    }
-}
-
-@media (max-width: 480px) {
-    .player-spots {
-        grid-template-columns: 1fr;
-    }
-
-    .game-container {
-        padding: 15px;
+        padding: 10px 25px;
+        font-size: 1em;
     }
 }
