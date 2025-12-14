@@ -397,6 +397,9 @@ h1 {
     cursor: pointer;
     color: #999;
     transition: color 0.3s;
+    z-index: 1001;
+    user-select: none;
+    line-height: 1;
 }
 
 .close:hover {

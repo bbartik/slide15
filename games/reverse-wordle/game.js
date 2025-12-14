@@ -260,17 +260,19 @@ class ReverseWordleGame {
             this.startNewGame();
         });
 
-        this.helpBtn.addEventListener('click', () => {
+        this.helpBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             this.helpModal.classList.remove('hidden');
         });
 
         const closeBtn = this.helpModal.querySelector('.close');
         closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             e.stopPropagation();
             this.helpModal.classList.add('hidden');
         });
 
-        window.addEventListener('click', (e) => {
+        this.helpModal.addEventListener('click', (e) => {
             if (e.target === this.helpModal) {
                 this.helpModal.classList.add('hidden');
             }
