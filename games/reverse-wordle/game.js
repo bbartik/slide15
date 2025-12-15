@@ -67,7 +67,7 @@ const RULES = {
             name: "capitalize_vowels",
             description: "Capitalize only the vowels",
             transform: (word) => word.replace(/[aeiou]/g, c => c.toUpperCase()),
-            keywords: ["capitalize vowel", "upper vowel", "vowel upper"]
+            keywords: ["capitalize vowel", "upper vowel", "vowel upper", "capital vowel", "uppercase vowel", "vowel capital"]
         },
         {
             name: "first_last",
@@ -368,9 +368,66 @@ class ReverseWordleGame {
     }
 
     checkGuess(guess) {
-        return this.currentRule.keywords.some(keyword =>
-            guess.includes(keyword) || keyword.includes(guess)
-        );
+        // Normalize the guess: remove extra spaces, punctuation
+        const normalizedGuess = guess.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+
+        // Check if any keyword matches
+        const keywordMatch = this.currentRule.keywords.some(keyword => {
+            const normalizedKeyword = keyword.toLowerCase();
+            return normalizedGuess.includes(normalizedKeyword) || normalizedKeyword.includes(normalizedGuess);
+        });
+
+        if (keywordMatch) return true;
+
+        // Additional fuzzy matching for common variations
+        const guessWords = normalizedGuess.split(' ');
+        const ruleName = this.currentRule.name;
+
+        // Special case matching for common patterns
+        if (ruleName === 'capitalize_vowels') {
+            const hasCapitalize = guessWords.some(w => w.match(/capital/));
+            const hasVowel = guessWords.some(w => w.match(/vowel/));
+            if (hasCapitalize && hasVowel) return true;
+        }
+
+        if (ruleName === 'reverse') {
+            if (guessWords.some(w => w.match(/^(reverse|backward|flip|mirror)/))) return true;
+        }
+
+        if (ruleName === 'uppercase') {
+            const hasUpper = guessWords.some(w => w.match(/upper|capital|caps/));
+            const hasAll = guessWords.some(w => w.match(/all|everything/));
+            if (hasUpper || (hasAll && guessWords.some(w => w.match(/capital/)))) return true;
+        }
+
+        if (ruleName === 'lowercase') {
+            const hasLower = guessWords.some(w => w.match(/lower|small/));
+            if (hasLower) return true;
+        }
+
+        if (ruleName === 'double') {
+            if (guessWords.some(w => w.match(/double|repeat|twice|duplicate/))) return true;
+        }
+
+        if (ruleName === 'remove_vowels') {
+            const hasRemove = guessWords.some(w => w.match(/remove|delete|drop|no/));
+            const hasVowel = guessWords.some(w => w.match(/vowel/));
+            if (hasRemove && hasVowel) return true;
+        }
+
+        if (ruleName === 'vowel_cycle') {
+            const hasVowel = guessWords.some(w => w.match(/vowel/));
+            const hasShift = guessWords.some(w => w.match(/shift|next|cycle|rotate/));
+            if (hasVowel && hasShift) return true;
+        }
+
+        if (ruleName === 'caesar_1' || ruleName === 'rot13') {
+            const hasShift = guessWords.some(w => w.match(/shift|caesar|rotate/));
+            const hasNumber = normalizedGuess.match(/\b(1|one|13|thirteen)\b/);
+            if (hasShift && hasNumber) return true;
+        }
+
+        return false;
     }
 
     showFeedback(isCorrect) {
